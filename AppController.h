@@ -14,14 +14,17 @@
 	IBOutlet NSPopUpButton *portListPopUpButton;
 	IBOutlet NSTextView *outputTextView;
 	AMSerialPort *port;
+	
+	NSUserDefaults *preferences;
 }
 
--(IBAction) chooseDevice:(id)sender;
-
--(IBAction) closePort:(id)sender;
+-(IBAction) startStopReading:(id)sender;
+-(IBAction) selectPort:(id)sender;
 
 					   
--(void) updateDeviceList;
+-(void) updatePortList;
+-(void) closePort;
+-(void) parseInput:(NSString *)text;
 
 -(void)log:(NSString *)text;
 

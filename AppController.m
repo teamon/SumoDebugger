@@ -9,11 +9,15 @@
 #import "AppController.h"
 #import "AMSerialPortList.h"
 
+#define DefaultPortPath @"DefaultPortPath"
+
 
 @implementation AppController
 
 - (void)awakeFromNib
 {
+	preferences = [[NSUserDefaults standardUserDefaults] retain];	
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(didAddPorts:) 
 												 name:AMSerialPortListDidAddPortsNotification 
@@ -23,17 +27,21 @@
 												 name:AMSerialPortListDidRemovePortsNotification
 											   object:nil];
 	[AMSerialPortList sharedPortList];
-	[self updateDeviceList];	
+	[self updatePortList];
+	
+	NSString *defaultPort = [preferences objectForKey:DefaultPortPath];
+	if(defaultPort && ![defaultPort isEqualToString:@""])
+	{
+		[portListPopUpButton selectItemWithTitle:defaultPort];
+		[self initPortFor:defaultPort];
+	}
 }
 
 - (void)windowWillClose:(NSNotification *)notification 
 {
-	[port clearError];
-	[port close];
+	[self closePort];
 	[NSApp terminate:self];
 }
-
-
 
 - (void) setPort:(AMSerialPort *)newPort
 {
@@ -51,30 +59,45 @@
 	return port;
 }
 
-- (void) initPortFor:(NSString *)deviceName
+- (void) openPort
 {
-	if(![deviceName isEqualToString:[port bsdPath]])
+	[self initPortFor:[portListPopUpButton titleOfSelectedItem]];
+	if([port isOpen]) return;
+	
+	[self log:@"[INFO] Attempting to open port"];
+	
+	if([port open])
+	{
+		[self log:[@"[INFO] Port opened for device " stringByAppendingString:[port bsdPath]]];
+		[port readDataInBackground];
+	}
+	else 
+	{
+		[self log:[@"[ERROR] Couldn`t open port for devie " stringByAppendingString:[port bsdPath]]];
+		[self setPort:nil];			
+	}
+	
+}
+
+- (void) closePort
+{
+	[port stopReadInBackground];
+	[port clearError];
+	[port close];
+}
+
+
+- (void) initPortFor:(NSString *)portPath
+{
+	if(![portPath isEqualToString:[port bsdPath]])
 	{
 		[port close];
 		
-		[self setPort:[[[AMSerialPort alloc] init:deviceName 
-										 withName:deviceName 
+		[self setPort:[[[AMSerialPort alloc] init:portPath 
+										 withName:portPath 
 											 type:(NSString*)CFSTR(kIOSerialBSDModemType)] autorelease]];
 		[port setDelegate:self];
-		[self log:@"[INFO] Attempting to open port"];
-		
-		if([port open])
-		{
-			[self log:@"[INFO] Port opened"];
-			[port setSpeed:B9600]; 
-			[port readDataInBackground];
-		}
-		else 
-		{
-			[self log:[[NSString stringWithString:@"[ERROR] Couldn`t open port for devie "] stringByAppendingString:deviceName]];
-			[self setPort:nil];			
-		}
-		
+		[port setSpeed:B9600]; 
 	}
 }
 	 
@@ -83,7 +106,7 @@
 	[outputTextView insertText:[text stringByAppendingString:@"\n"]];
 }
 
-- (void) updateDeviceList
+- (void) updatePortList
 {
 	[portListPopUpButton removeAllItems];
 	NSEnumerator *enumerator = [AMSerialPortList portEnumerator];
@@ -99,12 +122,13 @@
 
 - (void)serialPortReadData:(NSDictionary *)dataDictionary
 {
+	NSLog(@"DUPA");
 	AMSerialPort *sendPort = [dataDictionary objectForKey:@"serialPort"];
 	NSData *data = [dataDictionary objectForKey:@"data"];
 	if([data length] > 0)
 	{
 		NSString *text = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-		[self log:[@"[INPUT] " stringByAppendingString:text]];
+		[self parseInput:text];
 		[text release];
 		
 		[sendPort readDataInBackground];
@@ -113,33 +137,54 @@
 	{
 		[self log:@"[INFO] Port closed"];
 	}
+}
 
+- (void) parseInput:(NSString *)text
+{
+	[self log:[@"[INPUT] " stringByAppendingString:[text substringToIndex:[text length]-1]]];
 }
 
 - (void)didAddPorts:(NSNotification *)theNotification
 {
 	[self log:@"[INFO] New port found"];
-	[self updateDeviceList];
+	[self updatePortList];
+	
+	NSString *defaultPort = [preferences objectForKey:DefaultPortPath];
+	if([[portListPopUpButton itemTitles] containsObject:defaultPort]){
+		[self log:[@"Selecting default port:" stringByAppendingString:defaultPort]];
+		[portListPopUpButton selectItemWithTitle:defaultPort];
+	}
 }
 
 - (void)didRemovePorts:(NSNotification *)theNotification
 {
 	[self log:@"[INFO] Port removed"];
-	[self updateDeviceList];
+	[self updatePortList];
 }
 
 // actions
 
-- (IBAction) chooseDevice:(id)sender
+- (IBAction) startStopReading:(id)sender
 {
-	[self initPortFor:[sender titleOfSelectedItem]];
+	if([[sender title] isEqualToString:@"Start"])
+	{
+		[self openPort];
+		[sender setTitle:@"Stop"];
+	}
+	else 
+	{
+		[self closePort];
+		[sender setTitle:@"Start"];
+
+	}
 }
 
-- (IBAction) closePort:(id)sender
+- (IBAction) selectPort:(id)sender
 {
-	[port stopReadInBackground];
-	[port close];
+	[preferences setObject:[sender titleOfSelectedItem] forKey:DefaultPortPath];
 }
+
+
 
 
 @end
