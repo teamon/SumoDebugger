@@ -16,6 +16,13 @@
 	AMSerialPort *port;
 }
 
--(void) updatePortList;
+-(IBAction) chooseDevice:(id)sender;
+
+-(IBAction) closePort:(id)sender;
+
+					   
+-(void) updateDeviceList;
+
+-(void)log:(NSString *)text;
 
 @end

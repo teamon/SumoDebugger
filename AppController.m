@@ -23,7 +23,51 @@
 												 name:AMSerialPortListDidRemovePortsNotification
 											   object:nil];
 	[AMSerialPortList sharedPortList];
-	[self updatePortList];	
+	[self updateDeviceList];	
+}
+
+
+
+- (void) setPort:(AMSerialPort *)newPort
+{
+	id old = nil;
+	if(newPort != port)
+	{
+		old = port;
+		port = [newPort retain];
+		[old release];
+	}
+}
+
+- (AMSerialPort *)port 
+{
+	return port;
+}
+
+- (void) initPortFor:(NSString *)deviceName
+{
+	if(![deviceName isEqualToString:[port bsdPath]])
+	{
+		[port close];
+		
+		[self setPort:[[[AMSerialPort alloc] init:deviceName 
+										 withName:deviceName 
+											 type:(NSString*)CFSTR(kIOSerialBSDModemType)] autorelease]];
+		[port setDelegate:self];
+		[self log:@"[INFO] Attempting to open port"];
+		
+		if([port open])
+		{
+			[self log:@"[INFO] Port opened"];
+			[port readDataInBackground];
+		}
+		else 
+		{
+			[self log:[[NSString stringWithString:@"[ERROR] Couldn`t open port for devie "] stringByAppendingString:deviceName]];
+			[self setPort:nil];			
+		}
+		
+	}
 }
 	 
 - (void) log:(NSString *) text
@@ -31,7 +75,7 @@
 	[outputTextView insertText:[text stringByAppendingString:@"\n"]];
 }
 
-- (void) updatePortList
+- (void) updateDeviceList
 {
 	[portListPopUpButton removeAllItems];
 	NSEnumerator *enumerator = [AMSerialPortList portEnumerator];
@@ -43,16 +87,49 @@
 	[self log:@"[INFO] Port list updated"];
 }
 
+// port stuff
+
+- (void)serialPortReadData:(NSDictionary *)dataDictionary
+{
+	AMSerialPort *sendPort = [dataDictionary objectForKey:@"serialPort"];
+	NSData *data = [dataDictionary objectForKey:@"data"];
+	if([data length] > 0)
+	{
+		NSString *text = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+		[self log:[[NSString stringWithString:@"[INPUT] "] stringByAppendingString:text]];
+		[text release];
+		[sendPort readDataInBackground];
+	}
+	else 
+	{
+		[self log:@"[INFO] Port closed"];
+	}
+
+}
+
 - (void)didAddPorts:(NSNotification *)theNotification
 {
 	[self log:@"[INFO] New port found"];
-	[self updatePortList];
+	[self updateDeviceList];
 }
 
 - (void)didRemovePorts:(NSNotification *)theNotification
 {
 	[self log:@"[INFO] Port removed"];
-	[self updatePortList];
+	[self updateDeviceList];
+}
+
+// actions
+
+- (IBAction) chooseDevice:(id)sender
+{
+	[self initPortFor:[sender titleOfSelectedItem]];
+}
+
+- (IBAction) closePort:(id)sender
+{
+	[port stopReadInBackground];
+	[port close];
 }
 
 
