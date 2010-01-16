@@ -26,6 +26,13 @@
 	[self updateDeviceList];	
 }
 
+- (void)windowWillClose:(NSNotification *)notification 
+{
+	[port clearError];
+	[port close];
+	[NSApp terminate:self];
+}
+
 
 
 - (void) setPort:(AMSerialPort *)newPort
@@ -96,7 +103,7 @@
 	if([data length] > 0)
 	{
 		NSString *text = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-		[self log:[[NSString stringWithString:@"[INPUT] "] stringByAppendingString:text]];
+		[self log:[@"[INPUT] " stringByAppendingString:text]];
 		[text release];
 		[sendPort readDataInBackground];
 	}
