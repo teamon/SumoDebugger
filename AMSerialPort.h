@@ -2,7 +2,9 @@
 //  AMSerialPort.h
 //
 //  Created by Andreas on 2002-04-24.
-//  Copyright (c) 2001-2009 Andreas Mayer. All rights reserved.
+//  Copyright (c) 2001 Andreas Mayer. All rights reserved.
+//
+//
 //
 //  2002-09-18 Andreas Mayer
 //  - added available & owner
@@ -23,9 +25,8 @@
 //	- cleaned up the code and removed some (presumably) unnecessary locks
 //  2007-10-26 Sean McBride
 //  - made code 64 bit and garbage collection clean
-//  2008-10-21 Sean McBride
-//  - Added an API to open a serial port for exclusive use
-//  - fixed some memory management issues
+//	2009-3-20 Pat O'Keefe
+//	- fixed setSpeed method
 
 
 /*
@@ -96,7 +97,7 @@ typedef enum {
 } AMSerialStopBits;
 
 // Private constant
-#define AMSER_MAXBUFSIZE  4096UL
+#define AMSER_MAXBUFSIZE  512UL//4096UL
 
 extern NSString *const AMSerialErrorDomain;
 
@@ -119,23 +120,23 @@ extern NSString *const AMSerialErrorDomain;
 	BOOL gotError;
 	int	lastError;
 	id owner;
+	// used by AMSerialPortAdditions only:
 	char * __strong buffer;
+	id am_readTarget;
+	SEL am_readSelector;
 	NSTimeInterval readTimeout; // for public blocking read methods and doRead
 	fd_set * __strong readfds;
 	id delegate;
 	BOOL delegateHandlesReadInBackground;
 	BOOL delegateHandlesWriteInBackground;
-	NSLock *writeLock;
-	NSLock *readLock;
-	NSLock *closeLock;
 	
-	// used by AMSerialPortAdditions only:
-	id am_readTarget;
-	SEL am_readSelector;
+	NSLock *writeLock;
 	BOOL stopWriteInBackground;
 	int countWriteInBackgroundThreads;
+	NSLock *readLock;
 	BOOL stopReadInBackground;
 	int countReadInBackgroundThreads;
+	NSLock *closeLock;
 }
 
 - (id)init:(NSString *)path withName:(NSString *)name type:(NSString *)serialType;
@@ -174,12 +175,7 @@ extern NSString *const AMSerialErrorDomain;
 
 
 - (NSFileHandle *)open;
-// opens port for read and write operations, allow shared access of port
-// to actually read or write data use the methods provided by NSFileHandle
-// (alternatively you may use those from AMSerialPortAdditions)
-
-- (NSFileHandle *)openExclusively;
-// opens port for read and write operations, insist on exclusive access to port
+// opens port for read and write operations
 // to actually read or write data use the methods provided by NSFileHandle
 // (alternatively you may use those from AMSerialPortAdditions)
 
@@ -187,7 +183,7 @@ extern NSString *const AMSerialErrorDomain;
 // close port - no more read or write operations allowed
 
 - (BOOL)drainInput;
-- (BOOL)flushInput:(BOOL)fIn output:(BOOL)fOut;	// (fIn or fOut) must be YES
+- (BOOL)flushInput:(BOOL)fIn Output:(BOOL)fOut;	// (fIn or fOut) must be YES
 - (BOOL)sendBreak;
 
 - (BOOL)setDTR;

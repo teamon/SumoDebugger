@@ -66,6 +66,7 @@
 		if([port open])
 		{
 			[self log:@"[INFO] Port opened"];
+			[port setSpeed:B9600]; 
 			[port readDataInBackground];
 		}
 		else 
@@ -105,6 +106,7 @@
 		NSString *text = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 		[self log:[@"[INPUT] " stringByAppendingString:text]];
 		[text release];
+		
 		[sendPort readDataInBackground];
 	}
 	else 

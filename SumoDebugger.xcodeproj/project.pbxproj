@@ -9,16 +9,15 @@
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m */; };
-		6FE6109E1101FF0E00156424 /* AMSerialPort_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610931101FF0E00156424 /* AMSerialPort_Deprecated.m */; };
-		6FE6109F1101FF0E00156424 /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610951101FF0E00156424 /* AMSerialPort.m */; };
-		6FE610A01101FF0E00156424 /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610971101FF0E00156424 /* AMSerialPortAdditions.m */; };
-		6FE610A11101FF0E00156424 /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610991101FF0E00156424 /* AMSerialPortList_Deprecated.m */; };
-		6FE610A21101FF0E00156424 /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6109B1101FF0E00156424 /* AMSerialPortList.m */; };
-		6FE610A31101FF0E00156424 /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6109D1101FF0E00156424 /* AMStandardEnumerator.m */; };
 		6FE610A71101FF7B00156424 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE610A61101FF7B00156424 /* IOKit.framework */; };
 		6FE610CF110201D900156424 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610CE110201D900156424 /* AppController.m */; };
 		6FE6110311020E6200156424 /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE6110211020E6200156424 /* BWToolkitFramework.framework */; };
 		6FE6111111020EB400156424 /* BWToolkitFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FE6110211020E6200156424 /* BWToolkitFramework.framework */; };
+		6FE6127A11023FED00156424 /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127011023FED00156424 /* AMSerialPort.m */; };
+		6FE6127B11023FED00156424 /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127211023FED00156424 /* AMSerialPortAdditions.m */; };
+		6FE6127C11023FED00156424 /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127411023FED00156424 /* AMSerialPortList_Deprecated.m */; };
+		6FE6127D11023FED00156424 /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127611023FED00156424 /* AMSerialPortList.m */; };
+		6FE6127E11023FED00156424 /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127911023FED00156424 /* AMStandardEnumerator.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -47,24 +46,22 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		6FE610901101FF0E00156424 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
-		6FE610911101FF0E00156424 /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
-		6FE610921101FF0E00156424 /* AMSerialPort_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort_Deprecated.h; sourceTree = "<group>"; };
-		6FE610931101FF0E00156424 /* AMSerialPort_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort_Deprecated.m; sourceTree = "<group>"; };
-		6FE610941101FF0E00156424 /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
-		6FE610951101FF0E00156424 /* AMSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort.m; sourceTree = "<group>"; };
-		6FE610961101FF0E00156424 /* AMSerialPortAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortAdditions.h; sourceTree = "<group>"; };
-		6FE610971101FF0E00156424 /* AMSerialPortAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortAdditions.m; sourceTree = "<group>"; };
-		6FE610981101FF0E00156424 /* AMSerialPortList_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList_Deprecated.h; sourceTree = "<group>"; };
-		6FE610991101FF0E00156424 /* AMSerialPortList_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList_Deprecated.m; sourceTree = "<group>"; };
-		6FE6109A1101FF0E00156424 /* AMSerialPortList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList.h; sourceTree = "<group>"; };
-		6FE6109B1101FF0E00156424 /* AMSerialPortList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList.m; sourceTree = "<group>"; };
-		6FE6109C1101FF0E00156424 /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
-		6FE6109D1101FF0E00156424 /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
 		6FE610A61101FF7B00156424 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		6FE610CD110201D900156424 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		6FE610CE110201D900156424 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		6FE6110211020E6200156424 /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BWToolkitFramework.framework; path = /opt/BWToolkitFramework.framework; sourceTree = "<absolute>"; };
+		6FE6126E11023FED00156424 /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
+		6FE6126F11023FED00156424 /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
+		6FE6127011023FED00156424 /* AMSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort.m; sourceTree = "<group>"; };
+		6FE6127111023FED00156424 /* AMSerialPortAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortAdditions.h; sourceTree = "<group>"; };
+		6FE6127211023FED00156424 /* AMSerialPortAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortAdditions.m; sourceTree = "<group>"; };
+		6FE6127311023FED00156424 /* AMSerialPortList_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList_Deprecated.h; sourceTree = "<group>"; };
+		6FE6127411023FED00156424 /* AMSerialPortList_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList_Deprecated.m; sourceTree = "<group>"; };
+		6FE6127511023FED00156424 /* AMSerialPortList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList.h; sourceTree = "<group>"; };
+		6FE6127611023FED00156424 /* AMSerialPortList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList.m; sourceTree = "<group>"; };
+		6FE6127711023FED00156424 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
+		6FE6127811023FED00156424 /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
+		6FE6127911023FED00156424 /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* SumoDebugger-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SumoDebugger-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SumoDebugger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SumoDebugger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -86,20 +83,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				6FE610901101FF0E00156424 /* AMSDKCompatibility.h */,
-				6FE610911101FF0E00156424 /* AMSerialErrors.h */,
-				6FE610921101FF0E00156424 /* AMSerialPort_Deprecated.h */,
-				6FE610931101FF0E00156424 /* AMSerialPort_Deprecated.m */,
-				6FE610941101FF0E00156424 /* AMSerialPort.h */,
-				6FE610951101FF0E00156424 /* AMSerialPort.m */,
-				6FE610961101FF0E00156424 /* AMSerialPortAdditions.h */,
-				6FE610971101FF0E00156424 /* AMSerialPortAdditions.m */,
-				6FE610981101FF0E00156424 /* AMSerialPortList_Deprecated.h */,
-				6FE610991101FF0E00156424 /* AMSerialPortList_Deprecated.m */,
-				6FE6109A1101FF0E00156424 /* AMSerialPortList.h */,
-				6FE6109B1101FF0E00156424 /* AMSerialPortList.m */,
-				6FE6109C1101FF0E00156424 /* AMStandardEnumerator.h */,
-				6FE6109D1101FF0E00156424 /* AMStandardEnumerator.m */,
 				256AC3D80F4B6AC300CF3369 /* SumoDebuggerAppDelegate.h */,
 				256AC3D90F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m */,
 				6FE610CD110201D900156424 /* AppController.h */,
@@ -138,6 +121,7 @@
 		29B97314FDCFA39411CA2CEA /* SumoDebugger */ = {
 			isa = PBXGroup;
 			children = (
+				6FE6126D11023FED00156424 /* Serial Flotsam */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -173,6 +157,25 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6FE6126D11023FED00156424 /* Serial Flotsam */ = {
+			isa = PBXGroup;
+			children = (
+				6FE6126E11023FED00156424 /* AMSerialErrors.h */,
+				6FE6126F11023FED00156424 /* AMSerialPort.h */,
+				6FE6127011023FED00156424 /* AMSerialPort.m */,
+				6FE6127111023FED00156424 /* AMSerialPortAdditions.h */,
+				6FE6127211023FED00156424 /* AMSerialPortAdditions.m */,
+				6FE6127311023FED00156424 /* AMSerialPortList_Deprecated.h */,
+				6FE6127411023FED00156424 /* AMSerialPortList_Deprecated.m */,
+				6FE6127511023FED00156424 /* AMSerialPortList.h */,
+				6FE6127611023FED00156424 /* AMSerialPortList.m */,
+				6FE6127711023FED00156424 /* AMSDKCompatibility.h */,
+				6FE6127811023FED00156424 /* AMStandardEnumerator.h */,
+				6FE6127911023FED00156424 /* AMStandardEnumerator.m */,
+			);
+			name = "Serial Flotsam";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,13 +236,12 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				256AC3DA0F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m in Sources */,
-				6FE6109E1101FF0E00156424 /* AMSerialPort_Deprecated.m in Sources */,
-				6FE6109F1101FF0E00156424 /* AMSerialPort.m in Sources */,
-				6FE610A01101FF0E00156424 /* AMSerialPortAdditions.m in Sources */,
-				6FE610A11101FF0E00156424 /* AMSerialPortList_Deprecated.m in Sources */,
-				6FE610A21101FF0E00156424 /* AMSerialPortList.m in Sources */,
-				6FE610A31101FF0E00156424 /* AMStandardEnumerator.m in Sources */,
 				6FE610CF110201D900156424 /* AppController.m in Sources */,
+				6FE6127A11023FED00156424 /* AMSerialPort.m in Sources */,
+				6FE6127B11023FED00156424 /* AMSerialPortAdditions.m in Sources */,
+				6FE6127C11023FED00156424 /* AMSerialPortList_Deprecated.m in Sources */,
+				6FE6127D11023FED00156424 /* AMSerialPortList.m in Sources */,
+				6FE6127E11023FED00156424 /* AMStandardEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

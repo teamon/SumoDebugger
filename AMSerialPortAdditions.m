@@ -2,7 +2,7 @@
 //  AMSerialPortAdditions.m
 //
 //  Created by Andreas on Thu May 02 2002.
-//  Copyright (c) 2001-2009 Andreas Mayer. All rights reserved.
+//  Copyright (c) 2001 Andreas Mayer. All rights reserved.
 //
 //  2002-07-02 Andreas Mayer
 //	- initialize buffer in readString
@@ -24,16 +24,12 @@
 //		(thanks to David Bainbridge for the bug report) does not work as of yet
 //  2007-10-26 Sean McBride
 //  - made code 64 bit and garbage collection clean
-//  2009-05-08 Sean McBride
-//  - added writeBytes:length:error: method
-//  - associated a name with created threads (for debugging, 10.6 only)
 
 
 #import "AMSDKCompatibility.h"
 
 #import <sys/ioctl.h>
 #import <sys/filio.h>
-#import <pthread.h>
 
 #import "AMSerialPortAdditions.h"
 #import "AMSerialErrors.h"
@@ -159,10 +155,6 @@
 // write to the serial port; NO if an error occured
 - (BOOL)writeData:(NSData *)data error:(NSError **)error
 {
-#ifdef AMSerialDebug
-	NSLog(@"•wrote: %@ • %@", data, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-#endif
-
 	BOOL result = NO;
 
 	const char *dataBytes = (const char*)[data bytes];
@@ -189,22 +181,13 @@
 		}
 		*error = [NSError errorWithDomain:AMSerialErrorDomain code:errorCode userInfo:userInfo];
 	}
-	
-	// To prevent premature collection.  (Under GC, the given NSData may have no strong references for all we know, and our inner pointer does not keep the NSData alive.  So without this, the data could be collected before we are done with it!)
-	[data self];
-	
+		
 	return result;
 }
 
 - (BOOL)writeString:(NSString *)string usingEncoding:(NSStringEncoding)encoding error:(NSError **)error
 {
 	NSData *data = [string dataUsingEncoding:encoding];
-	return [self writeData:data error:error];
-}
-
-- (BOOL)writeBytes:(const void *)bytes length:(NSUInteger)length error:(NSError **)error
-{
-	NSData *data = [NSData dataWithBytes:bytes length:length];
 	return [self writeData:data error:error];
 }
 
@@ -301,10 +284,6 @@
 
 - (void)readDataInBackgroundThread
 {
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= 1060)
-	(void)pthread_setname_np ("de.harmless.AMSerialPort.readDataInBackgroundThread");
-#endif
-	
 	NSData *data = nil;
 	void *localBuffer;
 	ssize_t bytesRead = 0;
@@ -326,16 +305,20 @@
 		//NSLog(@"readDataInBackgroundThread - [closeLock unlock]");
 		int res = select(fileDescriptor+1, localReadFDs, nil, nil, nil); // timeout);
 		if ((res >= 1) && (fileDescriptor >= 0)) {
-			bytesRead = read(fileDescriptor, localBuffer, AMSER_MAXBUFSIZE);
+			//bytesRead = read(fileDescriptor, localBuffer, AMSER_MAXBUFSIZE);
 		}
-		data = [NSData dataWithBytes:localBuffer length:bytesRead];
-		[delegate performSelectorOnMainThread:@selector(serialPortReadData:) withObject:[NSDictionary dictionaryWithObjectsAndKeys: self, @"serialPort", data, @"data", nil] waitUntilDone:NO];
+		//FIXME: This was modified on 3-20-09 by Pat O'Keefe for a particular application...swap comments for normal operation
+		//data = [NSData dataWithBytes:localBuffer length:bytesRead];
+		data = [self readUpToChar:'\n' error:NULL];
+		[delegate performSelectorOnMainThread:@selector(serialPortReadData:) withObject:[NSDictionary dictionaryWithObjectsAndKeys: self, @"serialPort", data, @"data", nil] waitUntilDone:YES];//was NO
 	} else {
 		[closeLock unlock];
 	}
 	[localAutoreleasePool release];
-	free(localReadFDs);
-	free(localBuffer);
+	if (localReadFDs)
+		free(localReadFDs);
+	if (localBuffer)
+		free(localBuffer);
 
 	countReadInBackgroundThreads--;
 
@@ -408,9 +391,6 @@
 
 - (void)writeDataInBackgroundThread:(NSData *)data
 {
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= 1060)
-	(void)pthread_setname_np ("de.harmless.AMSerialPort.writeDataInBackgroundThread");
-#endif
 	
 #ifdef AMSerialDebug
 	NSLog(@"writeDataInBackgroundThread");
@@ -502,6 +482,7 @@
 	
 	struct timeval timeout;
 	NSUInteger bytesRead = 0;
+	BOOL stop = NO;
 	int errorCode = kAMSerialErrorNone;
 	int endCode = kAMSerialEndOfStream;
 	NSError *underlyingError = nil;
@@ -515,8 +496,9 @@
 	// This value will be decreased each time through the loop
 	NSTimeInterval remainingTimeout = totalTimeout;
 	
-	while (YES) {
+	while (!stop) {
 		if (remainingTimeout <= 0.0) {
+			stop = YES;
 			errorCode = kAMSerialErrorTimeout;
 			break;
 		} else {
@@ -539,9 +521,11 @@
 			[self readTimeoutAsTimeval:&timeout];
 			int selectResult = select(fileDescriptor+1, readfds, NULL, NULL, &timeout);
 			if (selectResult == -1) {
+				stop = YES;
 				errorCode = kAMSerialErrorFatal;
 				break;
 			} else if (selectResult == 0) {
+				stop = YES;
 				errorCode = kAMSerialErrorTimeout;
 				break;
 			} else {
@@ -556,26 +540,32 @@
 					bytesRead += readResult;
 					if (stopAfterBytes) {
 						if (bytesRead == bytesToRead) {
+							stop = YES;
 							endCode = kAMSerialStopLengthReached;
 							break;
 						} else if (bytesRead > bytesToRead) {
+							stop = YES;
 							endCode = kAMSerialStopLengthExceeded;
 							break;
 						}
 					}
 					if (stopAtChar && (buffer[bytesRead-1] == stopChar)) {
+						stop = YES;
 						endCode = kAMSerialStopCharReached;
 						break;
 					}
 					if (bytesRead >= AMSER_MAXBUFSIZE) {
+						stop = YES;
 						errorCode = kAMSerialErrorInternalBufferFull;
 						break;
 					}
 				} else if (readResult == 0) {
 					// Should not be possible since select() has indicated data is available
+					stop = YES;
 					errorCode = kAMSerialErrorFatal;
 					break;
 				} else {
+					stop = YES;
 					// Make underlying error
 					underlyingError = [NSError errorWithDomain:NSPOSIXErrorDomain code:readResult userInfo:nil];
 					errorCode = kAMSerialErrorFatal;
@@ -603,10 +593,6 @@
 		result = [NSData dataWithBytes:buffer length:bytesRead];
 	}
 	
-#ifdef AMSerialDebug
-	NSLog(@"• read: %@ • %@", result, [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding]);
-#endif
-
 	return result;
 }
 
