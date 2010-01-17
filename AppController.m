@@ -16,6 +16,19 @@
 
 - (void)awakeFromNib
 {
+	distanceSensors[0].label = dist0ValueLabel;
+	distanceSensors[0].levelIndicator = dist0LevelIndicator;
+	distanceSensors[1].label = dist1ValueLabel;
+	distanceSensors[1].levelIndicator = dist1LevelIndicator;
+	distanceSensors[2].label = dist2ValueLabel;
+	distanceSensors[2].levelIndicator = dist2LevelIndicator;
+	distanceSensors[3].label = dist3ValueLabel;
+	distanceSensors[3].levelIndicator = dist3LevelIndicator;
+	distanceSensors[4].label = dist4ValueLabel;
+	distanceSensors[4].levelIndicator = dist4LevelIndicator;
+	distanceSensors[5].label = dist5ValueLabel;
+	distanceSensors[5].levelIndicator = dist5LevelIndicator;
+	
 	preferences = [[NSUserDefaults standardUserDefaults] retain];	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self 
@@ -135,13 +148,41 @@
 	}
 	else 
 	{
+		[self closePort];
 		[self log:@"[INFO] Port closed"];
 	}
 }
 
-- (void) parseInput:(NSString *)text
+- (void) parseInput:(NSString *)input
 {
-	[self log:[@"[INPUT] " stringByAppendingString:[text substringToIndex:[text length]-1]]];
+	// Input: G1:..:GN:D1:..:DN:M1:..:MN:OTHER\n
+	[self log:[@"[INPUT] " stringByAppendingString:[input substringToIndex:[input length]-1]]];
+	
+	NSArray *chunks = [input componentsSeparatedByString: @":"];
+	
+	if([chunks count] < (GROUND_COUNT + DISTANCE_COUNT + MOTOR_COUNT + 1)) return;
+	
+	int value;
+	
+	// ground sensors
+	//for(int i=0 ; i<GROUND_COUNT; i++) {
+	//	value = [[chunks objectAtIndex:i] intValue];
+	//}
+	
+	// distance sensors
+	for(int i=0; i<DISTANCE_COUNT; i++){
+		value = [[chunks objectAtIndex:(i+GROUND_COUNT)] intValue];
+		[distanceSensors[i].label setIntValue:value];
+		[distanceSensors[i].levelIndicator setIntValue:(value*50/1023)];
+	}
+	
+	// motors
+	//for(int i=0; i<MOTOR_COUNT; i++){
+	//	value = [[chunks objectAtIndex:i] intValue];
+	//}
+	
+	// other
+	//chunks[i] 
 }
 
 - (void)didAddPorts:(NSNotification *)theNotification
@@ -151,7 +192,7 @@
 	
 	NSString *defaultPort = [preferences objectForKey:DefaultPortPath];
 	if([[portListPopUpButton itemTitles] containsObject:defaultPort]){
-		[self log:[@"Selecting default port:" stringByAppendingString:defaultPort]];
+		[self log:[@"[INFO] Selecting default port:" stringByAppendingString:defaultPort]];
 		[portListPopUpButton selectItemWithTitle:defaultPort];
 	}
 }
@@ -175,7 +216,6 @@
 	{
 		[self closePort];
 		[sender setTitle:@"Start"];
-
 	}
 }
 
@@ -183,8 +223,6 @@
 {
 	[preferences setObject:[sender titleOfSelectedItem] forKey:DefaultPortPath];
 }
-
-
 
 
 @end
