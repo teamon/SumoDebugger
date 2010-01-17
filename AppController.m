@@ -29,6 +29,18 @@
 	distanceSensors[5].label = dist5ValueLabel;
 	distanceSensors[5].levelIndicator = dist5LevelIndicator;
 	
+	groundSensors[0].checkBox = ground0CheckBox;
+	groundSensors[1].checkBox = ground1CheckBox;
+	groundSensors[2].checkBox = ground2CheckBox;
+	groundSensors[3].checkBox = ground3CheckBox;
+	
+	engines[0].slider = engine0Slider;
+	engines[0].label = engine0ValueLabel;
+	engines[1].slider = engine1Slider;
+	engines[1].label = engine1ValueLabel;
+	
+	manualEngineMode = NO;
+	
 	preferences = [[NSUserDefaults standardUserDefaults] retain];	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self 
@@ -76,6 +88,12 @@
 {
 	[self initPortFor:[portListPopUpButton titleOfSelectedItem]];
 	if([port isOpen]) return;
+	
+	if([port bsdPath] == nil){
+		[self log:@"[ERROR] Empty bsdPath"];
+		[port close];
+		return;
+	}
 	
 	[self log:@"[INFO] Attempting to open port"];
 	
@@ -160,14 +178,15 @@
 	
 	NSArray *chunks = [input componentsSeparatedByString: @":"];
 	
-	if([chunks count] < (GROUND_COUNT + DISTANCE_COUNT + MOTOR_COUNT + 1)) return;
+	if([chunks count] < (GROUND_COUNT + DISTANCE_COUNT + ENGINE_COUNT + 1)) return;
 	
 	int value;
 	
 	// ground sensors
-	//for(int i=0 ; i<GROUND_COUNT; i++) {
-	//	value = [[chunks objectAtIndex:i] intValue];
-	//}
+	for(int i=0 ; i<GROUND_COUNT; i++) {
+		if ([[chunks objectAtIndex:i] intValue] == 1) [groundSensors[i].checkBox setState:NSOnState];
+		else [groundSensors[i].checkBox setState:NSOffState];
+	}
 	
 	// distance sensors
 	for(int i=0; i<DISTANCE_COUNT; i++){
@@ -176,10 +195,14 @@
 		[distanceSensors[i].levelIndicator setIntValue:(value*50/1023)];
 	}
 	
-	// motors
-	//for(int i=0; i<MOTOR_COUNT; i++){
-	//	value = [[chunks objectAtIndex:i] intValue];
-	//}
+	// engines
+	if(!manualEngineMode){
+		for(int i=0; i<ENGINE_COUNT; i++){
+			value = [[chunks objectAtIndex:(i+GROUND_COUNT+DISTANCE_COUNT)] intValue];
+			[engines[i].label setIntValue:value];
+			[engines[i].slider setIntValue:value];
+		}
+	}
 	
 	// other
 	//chunks[i] 
@@ -207,21 +230,28 @@
 
 - (IBAction) startStopReading:(id)sender
 {
-	if([[sender title] isEqualToString:@"Start"])
+	if([[sender title] isEqualToString:@"Connect"])
 	{
 		[self openPort];
-		[sender setTitle:@"Stop"];
+		[sender setTitle:@"Disconnect"];
 	}
 	else 
 	{
 		[self closePort];
-		[sender setTitle:@"Start"];
+		[sender setTitle:@"Connect"];
 	}
 }
 
 - (IBAction) selectPort:(id)sender
 {
 	[preferences setObject:[sender titleOfSelectedItem] forKey:DefaultPortPath];
+}
+
+-(IBAction) selectEngineMode:(id)sender
+{
+	manualEngineMode = [[[sender selectedCell] title] isEqualToString:@"Manual"];
+	for(int i=0; i<ENGINE_COUNT; i++) [engines[i].slider setEnabled:manualEngineMode];
+
 }
 
 
