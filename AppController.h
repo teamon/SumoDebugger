@@ -13,13 +13,15 @@
 #define DISTANCE_COUNT 6
 #define ENGINE_COUNT 2
 
+struct GroundSensor {
+	NSButton *displayCheckBox;
+	NSButton *activeCheckBox;
+};
+
 struct DistanceSensor {
 	NSTextField *label;
 	NSLevelIndicator *levelIndicator;
-};
-
-struct GroundSensor {
-	NSButton *checkBox;
+	NSButton *activeCheckBox;
 };
 
 struct Engine {
@@ -36,7 +38,21 @@ struct Engine {
 	
 	IBOutlet NSPopUpButton *portListPopUpButton;
 	IBOutlet NSTextView *outputTextView;
+	IBOutlet NSTextView *debugTextView;
 	IBOutlet NSMatrix *selectEngineModeMatrix;
+	IBOutlet NSTextField *customSendTextField;
+	
+	// ground sensors
+	IBOutlet NSButton *ground0DisplayCheckBox;
+	IBOutlet NSButton *ground1DisplayCheckBox;
+	IBOutlet NSButton *ground2DisplayCheckBox;
+	IBOutlet NSButton *ground3DisplayCheckBox;
+	IBOutlet NSButton *ground0ActiveCheckBox;
+	IBOutlet NSButton *ground1ActiveCheckBox;
+	IBOutlet NSButton *ground2ActiveCheckBox;
+	IBOutlet NSButton *ground3ActiveCheckBox;
+	struct GroundSensor groundSensors[GROUND_COUNT];
+	
 	
 	// distance sensors	
 	IBOutlet NSTextField *dist0ValueLabel;
@@ -51,14 +67,14 @@ struct Engine {
 	IBOutlet NSLevelIndicator *dist3LevelIndicator;
 	IBOutlet NSLevelIndicator *dist4LevelIndicator;
 	IBOutlet NSLevelIndicator *dist5LevelIndicator;
+	IBOutlet NSButton *dist0ActiveCheckBox;
+	IBOutlet NSButton *dist1ActiveCheckBox;
+	IBOutlet NSButton *dist2ActiveCheckBox;
+	IBOutlet NSButton *dist3ActiveCheckBox;
+	IBOutlet NSButton *dist4ActiveCheckBox;
+	IBOutlet NSButton *dist5ActiveCheckBox;
 	struct DistanceSensor distanceSensors[DISTANCE_COUNT];
 	
-	// ground sensors
-	IBOutlet NSButton *ground0CheckBox;
-	IBOutlet NSButton *ground1CheckBox;
-	IBOutlet NSButton *ground2CheckBox;
-	IBOutlet NSButton *ground3CheckBox;
-	struct GroundSensor groundSensors[GROUND_COUNT];
 	
 	// engines
 	IBOutlet NSSlider *engine0Slider;
@@ -71,6 +87,11 @@ struct Engine {
 -(IBAction) startStopReading:(id)sender;
 -(IBAction) selectPort:(id)sender;
 -(IBAction) selectEngineMode:(id)sender;
+-(IBAction) sendStart:(id)sender;
+-(IBAction) sendReset:(id)sender;
+-(IBAction) sendNewline:(id)sender;
+-(IBAction) sendCustom:(id)sender;
+-(IBAction) clearLog:(id)sender;
 
 					   
 -(void) updatePortList;

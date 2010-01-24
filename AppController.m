@@ -16,30 +16,58 @@
 
 - (void)awakeFromNib
 {
+	groundSensors[0].displayCheckBox = ground0DisplayCheckBox;
+	groundSensors[1].displayCheckBox = ground1DisplayCheckBox;
+	groundSensors[2].displayCheckBox = ground2DisplayCheckBox;
+	groundSensors[3].displayCheckBox = ground3DisplayCheckBox;
+	
+	groundSensors[0].activeCheckBox = ground0ActiveCheckBox;
+	groundSensors[1].activeCheckBox = ground1ActiveCheckBox;
+	groundSensors[2].activeCheckBox = ground2ActiveCheckBox;
+	groundSensors[3].activeCheckBox = ground3ActiveCheckBox;
+	
+	for(int i=0 ; i<GROUND_COUNT; i++) {
+		[groundSensors[i].activeCheckBox setAction:@selector(activateGroundSensor:)];
+	}
+	
+	
 	distanceSensors[0].label = dist0ValueLabel;
-	distanceSensors[0].levelIndicator = dist0LevelIndicator;
 	distanceSensors[1].label = dist1ValueLabel;
-	distanceSensors[1].levelIndicator = dist1LevelIndicator;
 	distanceSensors[2].label = dist2ValueLabel;
-	distanceSensors[2].levelIndicator = dist2LevelIndicator;
 	distanceSensors[3].label = dist3ValueLabel;
-	distanceSensors[3].levelIndicator = dist3LevelIndicator;
 	distanceSensors[4].label = dist4ValueLabel;
-	distanceSensors[4].levelIndicator = dist4LevelIndicator;
 	distanceSensors[5].label = dist5ValueLabel;
+	
+	distanceSensors[0].levelIndicator = dist0LevelIndicator;
+	distanceSensors[1].levelIndicator = dist1LevelIndicator;
+	distanceSensors[2].levelIndicator = dist2LevelIndicator;
+	distanceSensors[3].levelIndicator = dist3LevelIndicator;
+	distanceSensors[4].levelIndicator = dist4LevelIndicator;
 	distanceSensors[5].levelIndicator = dist5LevelIndicator;
 	
-	groundSensors[0].checkBox = ground0CheckBox;
-	groundSensors[1].checkBox = ground1CheckBox;
-	groundSensors[2].checkBox = ground2CheckBox;
-	groundSensors[3].checkBox = ground3CheckBox;
+	distanceSensors[0].activeCheckBox = dist0ActiveCheckBox;
+	distanceSensors[1].activeCheckBox = dist1ActiveCheckBox;
+	distanceSensors[2].activeCheckBox = dist2ActiveCheckBox;
+	distanceSensors[3].activeCheckBox = dist3ActiveCheckBox;
+	distanceSensors[4].activeCheckBox = dist4ActiveCheckBox;
+	distanceSensors[5].activeCheckBox = dist5ActiveCheckBox;
 	
+	for(int i=0 ; i<DISTANCE_COUNT; i++) {
+		[distanceSensors[i].activeCheckBox setAction:@selector(activateDistanceSensor:)];
+	}
+		
 	engines[0].slider = engine0Slider;
-	engines[0].label = engine0ValueLabel;
 	engines[1].slider = engine1Slider;
+	
+	engines[0].label = engine0ValueLabel;
 	engines[1].label = engine1ValueLabel;
 	
+	[engines[0].slider setAction:@selector(setEngingPower:)];
+	[engines[1].slider setAction:@selector(setEngingPower:)];
+	
 	manualEngineMode = NO;
+	
+	
 	
 	preferences = [[NSUserDefaults standardUserDefaults] retain];	
 	
@@ -136,6 +164,10 @@
 {
 	[outputTextView insertText:[text stringByAppendingString:@"\n"]];
 }
+- (void) debuglog:(NSString *) text
+{
+	[debugTextView insertText:[text stringByAppendingString:@"\n"]];
+}
 
 - (void) updatePortList
 {
@@ -153,13 +185,16 @@
 
 - (void)serialPortReadData:(NSDictionary *)dataDictionary
 {
-	NSLog(@"DUPA");
 	AMSerialPort *sendPort = [dataDictionary objectForKey:@"serialPort"];
 	NSData *data = [dataDictionary objectForKey:@"data"];
 	if([data length] > 0)
 	{
 		NSString *text = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-		[self parseInput:text];
+		
+		for(NSString *c in [text componentsSeparatedByString:@"\n"]){
+			[self parseInput:c];
+		}		
+		
 		[text release];
 		
 		[sendPort readDataInBackground];
@@ -173,8 +208,13 @@
 
 - (void) parseInput:(NSString *)input
 {
-	// Input: G1:..:GN:D1:..:DN:M1:..:MN:OTHER\n
-	[self log:[@"[INPUT] " stringByAppendingString:[input substringToIndex:[input length]-1]]];
+	if([input isEqualToString:@""]) return;
+	if([[input substringWithRange:NSMakeRange(0,1)] isEqualToString:@"^"]){ // debug /^../
+		[self debuglog:input];
+		return;
+	}
+	
+	[self log:[@"[INPUT] " stringByAppendingString:input]];
 	
 	NSArray *chunks = [input componentsSeparatedByString: @":"];
 	
@@ -184,8 +224,8 @@
 	
 	// ground sensors
 	for(int i=0 ; i<GROUND_COUNT; i++) {
-		if ([[chunks objectAtIndex:i] intValue] == 1) [groundSensors[i].checkBox setState:NSOnState];
-		else [groundSensors[i].checkBox setState:NSOffState];
+		if ([[chunks objectAtIndex:i] intValue] == 1) [groundSensors[i].displayCheckBox setState:NSOnState];
+		else [groundSensors[i].displayCheckBox setState:NSOffState];
 	}
 	
 	// distance sensors
@@ -226,9 +266,18 @@
 	[self updatePortList];
 }
 
+- (void) send:(NSString *)msg
+{
+	[self log:[@"[OUTPUT] " stringByAppendingString:msg]];
+	NSError *error;
+	
+	if(port && [port isOpen]) [port writeString:msg usingEncoding:NSASCIIStringEncoding error:&error];
+	else [self log:@"[ERROR] Port not opened"];
+}
+
 // actions
 
-- (IBAction) startStopReading:(id)sender
+-(IBAction) startStopReading:(id)sender
 {
 	if([[sender title] isEqualToString:@"Connect"])
 	{
@@ -242,7 +291,7 @@
 	}
 }
 
-- (IBAction) selectPort:(id)sender
+-(IBAction) selectPort:(id)sender
 {
 	[preferences setObject:[sender titleOfSelectedItem] forKey:DefaultPortPath];
 }
@@ -251,8 +300,63 @@
 {
 	manualEngineMode = [[[sender selectedCell] title] isEqualToString:@"Manual"];
 	for(int i=0; i<ENGINE_COUNT; i++) [engines[i].slider setEnabled:manualEngineMode];
+	if(manualEngineMode) [self send:@"M1\n"];
+	else [self send:@"M0\n"];
 
 }
+
+-(IBAction) sendStart:(id)sender { [self send:@"!"]; }
+-(IBAction) sendReset:(id)sender { [self send:@"*"]; }
+-(IBAction) sendNewline:(id)sender { [self send:@"\n"]; }
+-(IBAction) sendCustom:(id)sender { [self send:[customSendTextField stringValue]]; }
+
+-(IBAction) clearLog:(id)sender {
+	NSFont *font = [outputTextView font];
+	
+	[outputTextView setString:@""];
+	[outputTextView setTextColor: [NSColor whiteColor]];
+	[outputTextView setFont:font];
+	
+	[debugTextView setString:@""];
+	[debugTextView setTextColor: [NSColor whiteColor]];
+	[debugTextView setFont:font];
+}
+		 
+-(void) activateGroundSensor:(id)sender
+{
+	for(int i=0 ; i<GROUND_COUNT; i++) {
+		if([groundSensors[i].activeCheckBox isEqual:sender]){
+			if([sender state] == NSOnState) [self send:[NSString stringWithFormat:@"G%d1\n", i]];
+			else [self send:[NSString stringWithFormat:@"G%d0\n", i]];
+			break;
+		}
+	}
+}
+
+-(void) activateDistanceSensor:(id)sender
+{
+	for(int i=0 ; i<DISTANCE_COUNT; i++) {
+		if([distanceSensors[i].activeCheckBox isEqual:sender]){
+			if([sender state] == NSOnState) [self send:[NSString stringWithFormat:@"D%d1\n", i]];
+			else [self send:[NSString stringWithFormat:@"D%d0\n", i]];
+			break;
+		}
+	}
+}
+
+-(void) setEngingPower:(id)sender
+{
+	if(!manualEngineMode) return;
+	
+	for(int i=0 ; i<ENGINE_COUNT; i++) {
+		if([engines[i].slider isEqual:sender]){
+			[self send:[NSString stringWithFormat:@"E%d%d\n", i, [sender intValue]]];
+			break;
+		}
+	}
+}
+			
+		
 
 
 @end
