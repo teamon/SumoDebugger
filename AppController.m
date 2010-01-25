@@ -44,13 +44,20 @@
 	distanceSensors[3].levelIndicator = dist3LevelIndicator;
 	distanceSensors[4].levelIndicator = dist4LevelIndicator;
 	distanceSensors[5].levelIndicator = dist5LevelIndicator;
-	
+		
 	distanceSensors[0].activeCheckBox = dist0ActiveCheckBox;
 	distanceSensors[1].activeCheckBox = dist1ActiveCheckBox;
 	distanceSensors[2].activeCheckBox = dist2ActiveCheckBox;
 	distanceSensors[3].activeCheckBox = dist3ActiveCheckBox;
 	distanceSensors[4].activeCheckBox = dist4ActiveCheckBox;
 	distanceSensors[5].activeCheckBox = dist5ActiveCheckBox;
+	
+	distanceSensors[0].historyView = dist0HistoryView;
+	distanceSensors[1].historyView = dist1HistoryView;
+	distanceSensors[2].historyView = dist2HistoryView;
+	distanceSensors[3].historyView = dist3HistoryView;
+	distanceSensors[4].historyView = dist4HistoryView;
+	distanceSensors[5].historyView = dist5HistoryView;
 	
 	for(int i=0 ; i<DISTANCE_COUNT; i++) {
 		[distanceSensors[i].activeCheckBox setAction:@selector(activateDistanceSensor:)];
@@ -229,10 +236,14 @@
 	}
 	
 	// distance sensors
+	DistanceHistoryView *view;
 	for(int i=0; i<DISTANCE_COUNT; i++){
 		value = [[chunks objectAtIndex:(i+GROUND_COUNT)] intValue];
 		[distanceSensors[i].label setIntValue:value];
 		[distanceSensors[i].levelIndicator setIntValue:(value*50/1023)];
+		view = distanceSensors[i].historyView;
+		[[view data] addObject:[NSNumber numberWithInt:value]];
+		[view setNeedsDisplay:YES];
 	}
 	
 	// engines

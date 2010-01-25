@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AmSerialPort.h"
+#import "DistanceHistoryView.h"
 
 #define GROUND_COUNT 4
 #define DISTANCE_COUNT 6
@@ -22,6 +23,7 @@ struct DistanceSensor {
 	NSTextField *label;
 	NSLevelIndicator *levelIndicator;
 	NSButton *activeCheckBox;
+	DistanceHistoryView *historyView;
 };
 
 struct Engine {
@@ -33,14 +35,14 @@ struct Engine {
 @interface AppController : NSObject {
 	NSUserDefaults *preferences;
 	AMSerialPort *port;
-	Boolean manualEngineMode;
-	
+	Boolean manualEngineMode;	
 	
 	IBOutlet NSPopUpButton *portListPopUpButton;
 	IBOutlet NSTextView *outputTextView;
 	IBOutlet NSTextView *debugTextView;
 	IBOutlet NSMatrix *selectEngineModeMatrix;
 	IBOutlet NSTextField *customSendTextField;
+	
 	
 	// ground sensors
 	IBOutlet NSButton *ground0DisplayCheckBox;
@@ -73,6 +75,12 @@ struct Engine {
 	IBOutlet NSButton *dist3ActiveCheckBox;
 	IBOutlet NSButton *dist4ActiveCheckBox;
 	IBOutlet NSButton *dist5ActiveCheckBox;
+	IBOutlet DistanceHistoryView *dist0HistoryView;
+	IBOutlet DistanceHistoryView *dist1HistoryView;
+	IBOutlet DistanceHistoryView *dist2HistoryView;
+	IBOutlet DistanceHistoryView *dist3HistoryView;
+	IBOutlet DistanceHistoryView *dist4HistoryView;
+	IBOutlet DistanceHistoryView *dist5HistoryView;
 	struct DistanceSensor distanceSensors[DISTANCE_COUNT];
 	
 	
@@ -97,6 +105,7 @@ struct Engine {
 -(void) updatePortList;
 -(void) closePort;
 -(void) parseInput:(NSString *)text;
+-(void) initPortFor:(NSString *)portPath;
 
 -(void)log:(NSString *)text;
 
