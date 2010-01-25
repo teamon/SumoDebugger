@@ -242,8 +242,7 @@
 		[distanceSensors[i].label setIntValue:value];
 		[distanceSensors[i].levelIndicator setIntValue:(value*50/1023)];
 		view = distanceSensors[i].historyView;
-		[[view data] addObject:[NSNumber numberWithInt:value]];
-		[view setNeedsDisplay:YES];
+		[view addValue:value];
 	}
 	
 	// engines

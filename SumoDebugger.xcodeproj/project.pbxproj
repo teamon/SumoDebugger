@@ -10,6 +10,7 @@
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m */; };
 		6F30CD53110E02AC0013558E /* DistanceLevelIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F30CD52110E02AC0013558E /* DistanceLevelIndicatorView.m */; };
+		6F30CD7B110E149B0013558E /* reality Icon 20.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6F30CD7A110E149B0013558E /* reality Icon 20.icns */; };
 		6F3D6F65110DE765005F35FC /* DistanceHistoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */; };
 		6FE610A71101FF7B00156424 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE610A61101FF7B00156424 /* IOKit.framework */; };
 		6FE610CF110201D900156424 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610CE110201D900156424 /* AppController.m */; };
@@ -50,6 +51,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		6F30CD51110E02AC0013558E /* DistanceLevelIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistanceLevelIndicatorView.h; sourceTree = "<group>"; };
 		6F30CD52110E02AC0013558E /* DistanceLevelIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistanceLevelIndicatorView.m; sourceTree = "<group>"; };
+		6F30CD7A110E149B0013558E /* reality Icon 20.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "reality Icon 20.icns"; sourceTree = "<group>"; };
 		6F3D6F63110DE765005F35FC /* DistanceHistoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistanceHistoryView.h; sourceTree = "<group>"; };
 		6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistanceHistoryView.m; sourceTree = "<group>"; };
 		6FE610A61101FF7B00156424 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -153,6 +155,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6F30CD7A110E149B0013558E /* reality Icon 20.icns */,
 				8D1107310486CEB800E47090 /* SumoDebugger-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -234,6 +237,7 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				6F30CD7B110E149B0013558E /* reality Icon 20.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

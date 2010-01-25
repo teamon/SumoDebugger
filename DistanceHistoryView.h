@@ -11,8 +11,11 @@
 
 @interface DistanceHistoryView : NSView {
 	NSMutableArray *_data;
+	NSMutableArray *_kalmanData;
+	double P;
 }
 
 -(NSMutableArray *)data;
+-(void)addValue:(int)value;
 
 @end
