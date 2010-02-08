@@ -9,7 +9,7 @@
 #import "DistanceHistoryView.h"
 
 #define KR 0.05
-#define KQ 0.0003
+#define KQ 0.03
 #define HISTORY_SIZE 100
 
 

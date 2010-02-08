@@ -44,7 +44,7 @@
 	distanceSensors[3].levelIndicator = dist3LevelIndicator;
 	distanceSensors[4].levelIndicator = dist4LevelIndicator;
 	distanceSensors[5].levelIndicator = dist5LevelIndicator;
-		
+	
 	distanceSensors[0].activeCheckBox = dist0ActiveCheckBox;
 	distanceSensors[1].activeCheckBox = dist1ActiveCheckBox;
 	distanceSensors[2].activeCheckBox = dist2ActiveCheckBox;
@@ -62,19 +62,19 @@
 	for(int i=0 ; i<DISTANCE_COUNT; i++) {
 		[distanceSensors[i].activeCheckBox setAction:@selector(activateDistanceSensor:)];
 	}
-		
+	
 	engines[0].slider = engine0Slider;
 	engines[1].slider = engine1Slider;
 	
 	engines[0].label = engine0ValueLabel;
 	engines[1].label = engine1ValueLabel;
 	
-	[engines[0].slider setAction:@selector(setEngingPower:)];
-	[engines[1].slider setAction:@selector(setEngingPower:)];
+	[engines[0].slider setAction:@selector(setEnginePower:)];
+	[engines[1].slider setAction:@selector(setEnginePower:)];
 	
-	manualEngineMode = NO;
+	engineMode = kNormal;
 	
-	
+	// serial port
 	
 	preferences = [[NSUserDefaults standardUserDefaults] retain];	
 	
@@ -90,11 +90,28 @@
 	[self updatePortList];
 	
 	NSString *defaultPort = [preferences objectForKey:DefaultPortPath];
-	if(defaultPort && ![defaultPort isEqualToString:@""])
+	if(defaultPort && ![defaultPort isEqualToString: @""])
 	{
-		[portListPopUpButton selectItemWithTitle:defaultPort];
-		[self initPortFor:defaultPort];
+		[portListPopUpButton selectItemWithTitle: defaultPort];
+		[self initPortFor: defaultPort];
 	}
+	
+	// joystick
+	
+	joystick.list = [[DDHidJoystick allJoysticks] retain];
+	[joystick.list makeObjectsPerformSelector: @selector(setDelegate:)
+								   withObject: self];
+	
+	if([joystick.list count] > 0){
+		joystick.current = [joystick.list objectAtIndex: 0];
+		[joystick.current startListening];
+		
+		NSArray * buttons = [joystick.current buttonElements];
+		for(DDHidElement *e in buttons){
+			NSLog(@"%@", [e usage]);
+		}
+	}
+	
 }
 
 - (void)windowWillClose:(NSNotification *)notification 
@@ -166,7 +183,7 @@
 		[port setSpeed:B9600]; 
 	}
 }
-	 
+
 - (void) log:(NSString *) text
 {
 	[outputTextView insertText:[text stringByAppendingString:@"\n"]];
@@ -246,7 +263,7 @@
 	}
 	
 	// engines
-	if(!manualEngineMode){
+	if(engineMode == kNormal){
 		for(int i=0; i<ENGINE_COUNT; i++){
 			value = [[chunks objectAtIndex:(i+GROUND_COUNT+DISTANCE_COUNT)] intValue];
 			[engines[i].label setIntValue:value];
@@ -306,14 +323,25 @@
 	[preferences setObject:[sender titleOfSelectedItem] forKey:DefaultPortPath];
 }
 
--(IBAction) selectEngineMode:(id)sender
+-(IBAction) setNormalEngineMode:(id)sender
 {
-	manualEngineMode = [[[sender selectedCell] title] isEqualToString:@"Manual"];
-	for(int i=0; i<ENGINE_COUNT; i++) [engines[i].slider setEnabled:manualEngineMode];
-	if(manualEngineMode) [self send:@"M1\n"];
-	else [self send:@"M0\n"];
-
+	engineMode = kNormal;
+	for(int i=0; i<ENGINE_COUNT; i++) [engines[i].slider setEnabled:NO];
+	[self send:@"M0\n"];
 }
+-(IBAction) setGUIEngineMode:(id)sender
+{
+	engineMode = kGUI;
+	for(int i=0; i<ENGINE_COUNT; i++) [engines[i].slider setEnabled:YES];
+	[self send:@"M1\n"];
+}
+-(IBAction) setJoystickEngineMode:(id)sender
+{
+	engineMode = kJoystick;
+	for(int i=0; i<ENGINE_COUNT; i++) [engines[i].slider setEnabled:NO];
+	[self send:@"M1\n"];
+}
+
 
 -(IBAction) sendStart:(id)sender { [self send:@"!"]; }
 -(IBAction) sendReset:(id)sender { [self send:@"*"]; }
@@ -331,8 +359,8 @@
 	[debugTextView setTextColor: [NSColor whiteColor]];
 	[debugTextView setFont:font];
 }
-		 
--(void) activateGroundSensor:(id)sender
+
+-(IBAction) activateGroundSensor:(id)sender
 {
 	for(int i=0 ; i<GROUND_COUNT; i++) {
 		if([groundSensors[i].activeCheckBox isEqual:sender]){
@@ -343,7 +371,7 @@
 	}
 }
 
--(void) activateDistanceSensor:(id)sender
+-(IBAction) activateDistanceSensor:(id)sender
 {
 	for(int i=0 ; i<DISTANCE_COUNT; i++) {
 		if([distanceSensors[i].activeCheckBox isEqual:sender]){
@@ -354,19 +382,70 @@
 	}
 }
 
--(void) setEngingPower:(id)sender
+-(IBAction) setEnginePower:(id)sender
 {
-	if(!manualEngineMode) return;
+	if(engineMode == kNormal) return;
 	
 	for(int i=0 ; i<ENGINE_COUNT; i++) {
 		if([engines[i].slider isEqual:sender]){
-			[self send:[NSString stringWithFormat:@"E%d%d\n", i, [sender intValue]]];
+			[self send:[NSString stringWithFormat:@"E%d%04d\n", i, [sender intValue]]];
+			[engines[i].label setIntValue:[sender intValue]];
 			break;
 		}
 	}
 }
-			
-		
+
+-(void)setEnginePower:(int)engine_id withValue:(int)value
+{
+	if(engineMode == kNormal) return;
+	
+	[self send:[NSString stringWithFormat:@"E%d%04d\n", engine_id, value]];
+	[engines[engine_id].label setIntValue:value];
+	[engines[engine_id].slider setIntValue:value];
+}
+
+-(void) changeEnginePower:(int)engine_id withValue:(int)value
+{
+	if(engineMode == kNormal) return;
+	
+	value += [engines[engine_id].label intValue];
+	if(value > 100) value = 100;
+	else if(value < -100) value = -100;
+	
+	[self send:[NSString stringWithFormat:@"E%d%04d\n", engine_id, value]];
+	[engines[engine_id].label setIntValue:value];
+	[engines[engine_id].slider setIntValue:value];
+	
+} 
+
+
+
+- (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick xChanged:(int)value;
+{
+	joystick.xValue = value * 100 / 65536;
+	if(engineMode == kJoystick)	[self setEnginePower: 1 withValue: joystick.xValue];
+}
+
+- (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick yChanged:(int)value;
+{
+    joystick.yValue = -value * 100 / 65536;
+	if(engineMode == kJoystick)	[self setEnginePower: 0 withValue: joystick.yValue];
+}
+
+- (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick otherAxis:(unsigned)otherAxis valueChanged:(int)value;
+{
+    joystick.zValue = value * 100 / 65536;
+}
+
+- (void) ddhidJoystick:(DDHidJoystick *)theJoystick buttonDown:(unsigned)buttonNumber;
+{
+    NSLog(@"Button %d down", buttonNumber);
+}
+
+- (void) ddhidJoystick:(DDHidJoystick *)theJoystick buttonUp:(unsigned)buttonNumber;
+{
+    NSLog(@"Button %d up", buttonNumber);
+}
 
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <DDHidLib/DDHidLib.h>
 #import "AmSerialPort.h"
 #import "DistanceHistoryView.h"
 
@@ -31,13 +32,26 @@ struct Engine {
 	NSTextField *label;
 };
 
+struct Joystick {
+	NSArray *list;
+	DDHidJoystick *current;
+	
+	int xValue;
+	int yValue;
+	int zValue;
+};
+
+enum EngineMode { kNormal, kGUI, kJoystick };
 
 @interface AppController : NSObject {
 	NSUserDefaults *preferences;
 	AMSerialPort *port;
-	Boolean manualEngineMode;	
+	enum EngineMode engineMode;
+	struct Joystick joystick;
+	
 	
 	IBOutlet NSPopUpButton *portListPopUpButton;
+	IBOutlet NSPopUpButton *joystickListPopUpButton;
 	IBOutlet NSTextView *outputTextView;
 	IBOutlet NSTextView *debugTextView;
 	IBOutlet NSMatrix *selectEngineModeMatrix;
@@ -94,11 +108,16 @@ struct Engine {
 
 -(IBAction) startStopReading:(id)sender;
 -(IBAction) selectPort:(id)sender;
--(IBAction) selectEngineMode:(id)sender;
+
+-(IBAction) setNormalEngineMode:(id)sender;
+-(IBAction) setGUIEngineMode:(id)sender;
+-(IBAction) setJoystickEngineMode:(id)sender;
+
 -(IBAction) sendStart:(id)sender;
 -(IBAction) sendReset:(id)sender;
 -(IBAction) sendNewline:(id)sender;
 -(IBAction) sendCustom:(id)sender;
+
 -(IBAction) clearLog:(id)sender;
 
 					   
@@ -108,5 +127,29 @@ struct Engine {
 -(void) initPortFor:(NSString *)portPath;
 
 -(void)log:(NSString *)text;
+
+- (void) ddhidJoystick: (DDHidJoystick *) theJoystick
+                 stick: (unsigned) stick
+             povNumber: (unsigned) povNumber
+          valueChanged: (int) value;
+
+- (void) ddhidJoystick: (DDHidJoystick *) theJoystick
+                 stick: (unsigned) stick
+              xChanged: (int) value;
+
+- (void) ddhidJoystick: (DDHidJoystick *) theJoystick
+                 stick: (unsigned) stick
+              yChanged: (int) value;
+
+- (void) ddhidJoystick: (DDHidJoystick *) theJoystick
+                 stick: (unsigned) stick
+             otherAxis: (unsigned) otherAxis
+          valueChanged: (int) value;
+
+- (void) ddhidJoystick: (DDHidJoystick *) theJoystick
+            buttonDown: (unsigned) buttonNumber;
+
+- (void) ddhidJoystick: (DDHidJoystick *) theJoystick
+              buttonUp: (unsigned) buttonNumber;
 
 @end

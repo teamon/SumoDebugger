@@ -12,6 +12,8 @@
 		6F30CD53110E02AC0013558E /* DistanceLevelIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F30CD52110E02AC0013558E /* DistanceLevelIndicatorView.m */; };
 		6F30CD7B110E149B0013558E /* reality Icon 20.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6F30CD7A110E149B0013558E /* reality Icon 20.icns */; };
 		6F3D6F65110DE765005F35FC /* DistanceHistoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */; };
+		6FB129D91120760B0095ED75 /* DDHidLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB129D81120760B0095ED75 /* DDHidLib.framework */; };
+		6FB129E2112076290095ED75 /* DDHidLib.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FB129D81120760B0095ED75 /* DDHidLib.framework */; };
 		6FE610A71101FF7B00156424 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE610A61101FF7B00156424 /* IOKit.framework */; };
 		6FE610CF110201D900156424 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610CE110201D900156424 /* AppController.m */; };
 		6FE6110311020E6200156424 /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE6110211020E6200156424 /* BWToolkitFramework.framework */; };
@@ -21,6 +23,7 @@
 		6FE6127C11023FED00156424 /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127411023FED00156424 /* AMSerialPortList_Deprecated.m */; };
 		6FE6127D11023FED00156424 /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127611023FED00156424 /* AMSerialPortList.m */; };
 		6FE6127E11023FED00156424 /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE6127911023FED00156424 /* AMStandardEnumerator.m */; };
+		6FEDB1CC1119C24500E62A80 /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEDB1CB1119C24500E62A80 /* MainView.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -33,6 +36,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6FB129E2112076290095ED75 /* DDHidLib.framework in CopyFiles */,
 				6FE6111111020EB400156424 /* BWToolkitFramework.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +58,7 @@
 		6F30CD7A110E149B0013558E /* reality Icon 20.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "reality Icon 20.icns"; sourceTree = "<group>"; };
 		6F3D6F63110DE765005F35FC /* DistanceHistoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistanceHistoryView.h; sourceTree = "<group>"; };
 		6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistanceHistoryView.m; sourceTree = "<group>"; };
+		6FB129D81120760B0095ED75 /* DDHidLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DDHidLib.framework; path = /opt/DDHidLib.framework; sourceTree = "<absolute>"; };
 		6FE610A61101FF7B00156424 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		6FE610CD110201D900156424 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		6FE610CE110201D900156424 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
@@ -70,6 +75,8 @@
 		6FE6127711023FED00156424 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
 		6FE6127811023FED00156424 /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
 		6FE6127911023FED00156424 /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
+		6FEDB1CA1119C24500E62A80 /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
+		6FEDB1CB1119C24500E62A80 /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* SumoDebugger-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SumoDebugger-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SumoDebugger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SumoDebugger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -82,6 +89,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				6FE610A71101FF7B00156424 /* IOKit.framework in Frameworks */,
 				6FE6110311020E6200156424 /* BWToolkitFramework.framework in Frameworks */,
+				6FB129D91120760B0095ED75 /* DDHidLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +107,8 @@
 				6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */,
 				6F30CD51110E02AC0013558E /* DistanceLevelIndicatorView.h */,
 				6F30CD52110E02AC0013558E /* DistanceLevelIndicatorView.m */,
+				6FEDB1CA1119C24500E62A80 /* MainView.h */,
+				6FEDB1CB1119C24500E62A80 /* MainView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -108,6 +118,7 @@
 			children = (
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				6FE6110211020E6200156424 /* BWToolkitFramework.framework */,
+				6FB129D81120760B0095ED75 /* DDHidLib.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -258,6 +269,7 @@
 				6FE6127E11023FED00156424 /* AMStandardEnumerator.m in Sources */,
 				6F3D6F65110DE765005F35FC /* DistanceHistoryView.m in Sources */,
 				6F30CD53110E02AC0013558E /* DistanceLevelIndicatorView.m in Sources */,
+				6FEDB1CC1119C24500E62A80 /* MainView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
