@@ -14,6 +14,7 @@
 		6F3D6F65110DE765005F35FC /* DistanceHistoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */; };
 		6FB129D91120760B0095ED75 /* DDHidLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB129D81120760B0095ED75 /* DDHidLib.framework */; };
 		6FB129E2112076290095ED75 /* DDHidLib.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FB129D81120760B0095ED75 /* DDHidLib.framework */; };
+		6FE264E3112ED92B00A3387F /* JoystickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE264E2112ED92B00A3387F /* JoystickView.m */; };
 		6FE610A71101FF7B00156424 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE610A61101FF7B00156424 /* IOKit.framework */; };
 		6FE610CF110201D900156424 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE610CE110201D900156424 /* AppController.m */; };
 		6FE6110311020E6200156424 /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE6110211020E6200156424 /* BWToolkitFramework.framework */; };
@@ -59,6 +60,8 @@
 		6F3D6F63110DE765005F35FC /* DistanceHistoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistanceHistoryView.h; sourceTree = "<group>"; };
 		6F3D6F64110DE765005F35FC /* DistanceHistoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistanceHistoryView.m; sourceTree = "<group>"; };
 		6FB129D81120760B0095ED75 /* DDHidLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DDHidLib.framework; path = /opt/DDHidLib.framework; sourceTree = "<absolute>"; };
+		6FE264E1112ED92B00A3387F /* JoystickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoystickView.h; sourceTree = "<group>"; };
+		6FE264E2112ED92B00A3387F /* JoystickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoystickView.m; sourceTree = "<group>"; };
 		6FE610A61101FF7B00156424 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		6FE610CD110201D900156424 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		6FE610CE110201D900156424 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
@@ -99,6 +102,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6FE264E1112ED92B00A3387F /* JoystickView.h */,
+				6FE264E2112ED92B00A3387F /* JoystickView.m */,
 				256AC3D80F4B6AC300CF3369 /* SumoDebuggerAppDelegate.h */,
 				256AC3D90F4B6AC300CF3369 /* SumoDebuggerAppDelegate.m */,
 				6FE610CD110201D900156424 /* AppController.h */,
@@ -270,6 +275,7 @@
 				6F3D6F65110DE765005F35FC /* DistanceHistoryView.m in Sources */,
 				6F30CD53110E02AC0013558E /* DistanceLevelIndicatorView.m in Sources */,
 				6FEDB1CC1119C24500E62A80 /* MainView.m in Sources */,
+				6FE264E3112ED92B00A3387F /* JoystickView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

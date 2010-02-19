@@ -10,6 +10,7 @@
 #import <DDHidLib/DDHidLib.h>
 #import "AmSerialPort.h"
 #import "DistanceHistoryView.h"
+#import "JoystickView.h"
 
 #define GROUND_COUNT 4
 #define DISTANCE_COUNT 6
@@ -56,6 +57,7 @@ enum EngineMode { kNormal, kGUI, kJoystick };
 	IBOutlet NSTextView *debugTextView;
 	IBOutlet NSMatrix *selectEngineModeMatrix;
 	IBOutlet NSTextField *customSendTextField;
+	IBOutlet JoystickView *joystickView;
 	
 	
 	// ground sensors

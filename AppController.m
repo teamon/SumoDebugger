@@ -8,6 +8,7 @@
 
 #import "AppController.h"
 #import "AMSerialPortList.h"
+#import "JoystickView.h"
 
 #define DefaultPortPath @"DefaultPortPath"
 
@@ -424,12 +425,14 @@
 {
 	joystick.xValue = value * 100 / 65536;
 	if(engineMode == kJoystick)	[self setEnginePower: 1 withValue: joystick.xValue];
+	[joystickView setX: joystick.xValue];
 }
 
 - (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick yChanged:(int)value;
 {
     joystick.yValue = -value * 100 / 65536;
 	if(engineMode == kJoystick)	[self setEnginePower: 0 withValue: joystick.yValue];
+	[joystickView setY: joystick.yValue];
 }
 
 - (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick otherAxis:(unsigned)otherAxis valueChanged:(int)value;
