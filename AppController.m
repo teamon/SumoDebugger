@@ -419,20 +419,47 @@
 	
 } 
 
+- (void) setEnginePowerFromJoystick
+{
+	if(engineMode != kJoystick)	return;
+
+	int e0,e1;
+
+	if(joystick.yValue >= 0){
+		if(joystick.xValue >= 0){
+			e0 = joystick.yValue;
+			e1 = joystick.yValue - joystick.xValue;
+		} else {
+			e0 = joystick.yValue + joystick.xValue;
+			e1 = joystick.yValue;
+		}
+	} else {
+		if(joystick.xValue >= 0){
+			e0 = joystick.yValue;
+			e1 = joystick.yValue + joystick.xValue;
+		} else {
+			e0 = joystick.yValue - joystick.xValue;
+			e1 = joystick.yValue;
+		}
+	}
+
+	[self setEnginePower: 0 withValue: e0];
+	[self setEnginePower: 1 withValue: e1];
+}
 
 
 - (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick xChanged:(int)value;
 {
 	joystick.xValue = value * 100 / 65536;
-	if(engineMode == kJoystick)	[self setEnginePower: 1 withValue: joystick.xValue];
 	[joystickView setX: joystick.xValue];
+	[self setEnginePowerFromJoystick];
 }
 
 - (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick yChanged:(int)value;
 {
     joystick.yValue = -value * 100 / 65536;
-	if(engineMode == kJoystick)	[self setEnginePower: 0 withValue: joystick.yValue];
 	[joystickView setY: joystick.yValue];
+	[self setEnginePowerFromJoystick];
 }
 
 - (void) ddhidJoystick:(DDHidJoystick *)theJoystick stick:(unsigned)stick otherAxis:(unsigned)otherAxis valueChanged:(int)value;
